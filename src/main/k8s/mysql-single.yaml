@@ -1,0 +1,59 @@
+# 这个部署文件把mysql存储指定在e:/k8s/data
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql #为该Deployment设置key为app，value为mysql的标签
+  name: mysql
+  namespace: default
+spec:
+  replicas: 1 #副本数量
+  selector: #标签选择器，与上面的标签共同作用
+    matchLabels: #选择包含标签app:nginx的资源
+      app: mysql
+  template: #这是选择或创建的Pod的模板
+    metadata: #Pod的元数据
+      labels: #Pod的标签，上面的selector即选择包含标签app:nginx的Pod
+        app: mysql
+    spec: #期望Pod实现的功能（即在pod中部署）
+      containers: #生成container，与docker中的container是同一种
+      - name: mysql
+        image: mysql:5.7 #使用镜像mysql: 创建container，该container默认3306端口可访问
+        ports:
+        - containerPort: 3306  # 开启本容器的3306端口可访问
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: Password123   
+        volumeMounts: #挂载持久存储卷
+        - name: mysql-data  #挂载设备的名字，与volumes[*].name 需要对应
+          mountPath: /var/lib/mysql  #挂载到容器的某个路径下
+        - name: mysql-dev-conf
+          mountPath: /etc/mysql/conf.d
+      volumes:
+      - name: mysql-data  #和上面保持一致 这是本地的文件路径，上面是容器内部的路径
+        hostPath:
+          path: /run/desktop/mnt/host/e/k8s/data/mysql/data
+          type: DirectoryOrCreate
+      - name: mysql-dev-conf
+        hostPath:
+          path: /run/desktop/mnt/host/e/k8s/data/mysql/conf
+          type: DirectoryOrCreate 
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+   app: mysql
+  name: mysql
+  namespace: default
+spec:
+  ports:
+  - port: 3306 #写nginx本身端口
+    name: mysql
+    protocol: TCP
+    targetPort: 3306 # 容器nginx对外开放的端口 上面的dm已经指定了
+    nodePort: 31090 #外网访问的端口
+  selector:
+    app: mysql    #选择包含标签app:nginx的资源
+  type: NodePort          

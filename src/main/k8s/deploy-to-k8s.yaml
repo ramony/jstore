@@ -1,0 +1,44 @@
+## 正常
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jstore
+  name: jstore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jstore
+  template:
+    metadata:
+      labels:
+        app: jstore
+    spec:
+      containers:
+        - name: jstore
+          image: 127.0.0.1:5000/jstore:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: spring.datasource.url
+              value: jdbc:mysql://mysql:3306/jstoredb9?characterEncoding=utf8&useSSL=true&useUnicode=true
+---
+
+## 直接部署到集群外
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: jstore
+  name: jstore-nodeport
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      protocol: TCP
+      nodePort: 30080
+  selector:
+    app: jstore
+
