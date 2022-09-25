@@ -7,7 +7,7 @@ This is a demo to start springboot application with mysql in k8s cluster.
 3) run kubectl apply mysql-single.yaml to create mysql database instance.
 4) execute dbscript.
 5) run mvn package
-6) visit http://localhost:30080/api/v1/detail/query, the expected result should be
+6) visit http://localhost:30080/api/v1/health/status, the expected result should be
   <pre>
   {
    "success": true,
