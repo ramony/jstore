@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.raybyte</groupId>
 	<artifactId>jstore</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.2</version>
 	<name>jstore</name>
 	<description>jstore app</description>
 	<properties>
@@ -99,8 +99,11 @@
 					<dockerDirectory>src/main/docker</dockerDirectory>
 					<!--用来配置Jar启动的Jvm参数，如-Xmx -->
 					<env>
-						<JAVA_OPTS></JAVA_OPTS>
+<!--						<finalJar>${project.build.finalName}.jar</finalJar>-->
 					</env>
+					<buildArgs>
+						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
 <!--					<entryPoint>java $JAVA_OPTS -jar ${project.build.finalName}.jar</entryPoint>-->
 					<resources>
 						<resource>
