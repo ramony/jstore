@@ -10,8 +10,8 @@ public interface DetailRepository extends JpaRepository<Detail, Long>, JpaSpecif
 
     boolean existsByDetailUrl(String detailUrl);
 
-    Detail findByDetailId(String detailId);
+    Detail findByDetailTypeAndDetailId(String detailType, Long detailId);
 
-    Page<Detail> findByIdLessThanAndReadFlag(Long id, Integer readFlag, Pageable pageable);
+    Page<Detail> findByDetailTypeAndReadFlagAndDetailIdLessThan(String detailType, Integer readFlag, Long id, Pageable pageable);
 
 }

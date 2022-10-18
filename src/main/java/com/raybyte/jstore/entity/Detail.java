@@ -20,7 +20,7 @@ public class Detail {
     private String detailType;
 
     @Column(name = "detail_id")
-    private String detailId;
+    private Long detailId;
 
     @Column(name = "detail_title")
     private String detailTitle;

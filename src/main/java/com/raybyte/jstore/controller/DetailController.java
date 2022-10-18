@@ -11,11 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,20 +45,45 @@ public class DetailController {
         }
     }
 
-//    @RequestMapping("/query")
-//    public Result query(@Param("pageNo") Integer pageNo) {
+
+    @RequestMapping("/queryMax/{source}")
+    public Result queryMax(@Param("maxId") Long maxId, @PathVariable("source") String source) {
+        if (maxId <= 0) {
+            maxId = Long.MAX_VALUE;
+        }
+        try {
+            Sort sort = Sort.by(Sort.Direction.DESC, "id");
+            Page<Detail> pageList = detailRepository.findByDetailTypeAndReadFlagAndDetailIdLessThan(source, 0, maxId, PageUtils.create(1, 20, sort));
+            LinksDTO links = new LinksDTO();
+            if (!CollectionUtils.isEmpty(pageList.getContent())) {
+                links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
+                pageList.getContent().stream().map(Detail::getId).reduce(Long::min).ifPresent(min -> links.setNext("?maxId=" + min));
+            } else {
+                links.setList(new ArrayList<>());
+            }
+            return Result.ok(links);
+        } catch (Exception e) {
+            return Result.fail("QUERY_ERROR_001", e.getMessage());
+        }
+    }
+//
+//    @RequestMapping("/queryMin/{source}")
+//    public Result queryMin(@Param("minId") Long minId, @PathVariable("source") String source) {
+//        if (minId < 0) {
+//            minId = 0L;
+//        }
 //        try {
-//            Detail detail = new Detail();
-//            detail.setReadFlag(0);
-//            Example<Detail> example = Example.of(detail);
-//            Sort sort = Sort.by(Sort.Direction.ASC, "pageNo");
-//            Page<Detail> pageList = detailRepository.findAll(example, PageUtils.create(pageNo, 10, sort));
+//            Sort sort = Sort.by(Sort.Direction.ASC, "id");
+//            Page<Detail> pageList = detailRepository.findByIdGreaterThanAndReadFlagAndDetailType(minId, 0, source, PageUtils.create(1, 20, sort));
 //            LinksDTO links = new LinksDTO();
-//            if (pageList.getContent() != null) {
+//            if (!CollectionUtils.isEmpty(pageList.getContent())) {
 //                links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
-//                if (!PageUtils.isLast(pageList)) {
-//                    links.setNext("?pageNo=" + (PageUtils.get(pageList) + 1));
+//                Optional<Long> maxIdOpt = pageList.getContent().stream().map(Detail::getId).reduce(Long::max);
+//                if (maxIdOpt.isPresent()) {
+//                    links.setNext("?minId=" + maxIdOpt.get());
 //                }
+//            } else {
+//                links.setList(List.of());
 //            }
 //            return Result.ok(links);
 //        } catch (Exception e) {
@@ -64,34 +91,11 @@ public class DetailController {
 //        }
 //    }
 
-    @RequestMapping("/query")
-    public Result query(@Param("maxId") Long maxId) {
-        if (maxId <= 0) {
-            maxId = Long.MAX_VALUE;
-        }
-        try {
-            Sort sort = Sort.by(Sort.Direction.DESC, "id");
-            Page<Detail> pageList = detailRepository.findByIdLessThanAndReadFlag(maxId, 0, PageUtils.create(1, 20, sort));
-            LinksDTO links = new LinksDTO();
-            if (!CollectionUtils.isEmpty(pageList.getContent())) {
-                links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
-                Optional<Long> minIdOpt = pageList.getContent().stream().map(Detail::getId).reduce(Long::min);
-                if (minIdOpt.isPresent()) {
-                    links.setNext("?maxId=" + minIdOpt.get());
-                }
-            } else {
-                links.setList(List.of());
-            }
-            return Result.ok(links);
-        } catch (Exception e) {
-            return Result.fail("QUERY_ERROR_001", e.getMessage());
-        }
-    }
-
     @RequestMapping("/markReadByDetailId")
-    public Result markReadByDetailId(@RequestBody Detail detail) {
+    public Result markReadByDetailId(@RequestBody String detailIdString) {
         try {
-            Detail detailDB = detailRepository.findByDetailId(detail.getDetailId());
+            String[] details = detailIdString.split("\\-");
+            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(details[0], Long.valueOf(details[1]));
             if (detailDB != null) {
                 detailDB.setReadFlag(1);
                 detailDB.setUpdateDate(new Timestamp(System.currentTimeMillis()));

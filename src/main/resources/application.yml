@@ -9,8 +9,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     password: Password123
-    #url: jdbc:mysql://localhost:31090/jstoredb9?characterEncoding=utf8&useSSL=true&useUnicode=true
-    url: jdbc:mysql://mysql:3306/jstoredb9?characterEncoding=utf8&useSSL=true&useUnicode=true
+    url: jdbc:mysql://localhost:31090/jstoredb9?characterEncoding=utf8&useSSL=true&useUnicode=true
     username: root
   jpa:
     properties:
