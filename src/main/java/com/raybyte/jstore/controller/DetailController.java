@@ -29,35 +29,37 @@ public class DetailController {
     @Autowired
     private DetailRepository detailRepository;
 
-    @RequestMapping("/create")
-    public Result create(@RequestBody List<Detail> detailList) {
+    @RequestMapping("/createDetail")
+    public Result<Integer> create(@RequestBody List<Detail> detailList) {
+        int count = 0;
         try {
             for (Detail detail : detailList) {
                 if (!detailRepository.existsByDetailUrl(detail.getDetailUrl())) {
                     detail.setCreateDate(new Timestamp(System.currentTimeMillis()));
                     detail.setUpdateDate(new Timestamp(System.currentTimeMillis()));
                     detailRepository.save(detail);
+                    count++;
                 }
             }
-            return Result.ok(1);
+            return Result.ok(count);
         } catch (Exception e) {
             return Result.fail("SAVE_ERROR_001", e.getMessage());
         }
     }
 
 
-    @RequestMapping("/queryMax/{source}")
+    @RequestMapping("/query/{source}")
     public Result queryMax(@Param("maxId") Long maxId, @PathVariable("source") String source) {
         if (maxId <= 0) {
             maxId = Long.MAX_VALUE;
         }
         try {
-            Sort sort = Sort.by(Sort.Direction.DESC, "id");
+            Sort sort = Sort.by(Sort.Direction.DESC, "detailId");
             Page<Detail> pageList = detailRepository.findByDetailTypeAndReadFlagAndDetailIdLessThan(source, 0, maxId, PageUtils.create(1, 20, sort));
             LinksDTO links = new LinksDTO();
             if (!CollectionUtils.isEmpty(pageList.getContent())) {
                 links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
-                pageList.getContent().stream().map(Detail::getId).reduce(Long::min).ifPresent(min -> links.setNext("?maxId=" + min));
+                pageList.getContent().stream().map(Detail::getDetailId).reduce(Long::min).ifPresent(min -> links.setNext("?maxId=" + min));
             } else {
                 links.setList(new ArrayList<>());
             }
@@ -66,30 +68,6 @@ public class DetailController {
             return Result.fail("QUERY_ERROR_001", e.getMessage());
         }
     }
-//
-//    @RequestMapping("/queryMin/{source}")
-//    public Result queryMin(@Param("minId") Long minId, @PathVariable("source") String source) {
-//        if (minId < 0) {
-//            minId = 0L;
-//        }
-//        try {
-//            Sort sort = Sort.by(Sort.Direction.ASC, "id");
-//            Page<Detail> pageList = detailRepository.findByIdGreaterThanAndReadFlagAndDetailType(minId, 0, source, PageUtils.create(1, 20, sort));
-//            LinksDTO links = new LinksDTO();
-//            if (!CollectionUtils.isEmpty(pageList.getContent())) {
-//                links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
-//                Optional<Long> maxIdOpt = pageList.getContent().stream().map(Detail::getId).reduce(Long::max);
-//                if (maxIdOpt.isPresent()) {
-//                    links.setNext("?minId=" + maxIdOpt.get());
-//                }
-//            } else {
-//                links.setList(List.of());
-//            }
-//            return Result.ok(links);
-//        } catch (Exception e) {
-//            return Result.fail("QUERY_ERROR_001", e.getMessage());
-//        }
-//    }
 
     @RequestMapping("/markReadByDetailId")
     public Result markReadByDetailId(@RequestBody String detailIdString) {

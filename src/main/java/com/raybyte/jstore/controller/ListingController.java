@@ -16,7 +16,7 @@ public class ListingController {
     @Autowired
     private ListingRepository listingRepository;
 
-    @RequestMapping("/create")
+    @RequestMapping("/createList")
     public Result create(@RequestBody Listing listing) {
         try {
             if(!listingRepository.existsByPageUrl(listing.getPageUrl())) {
