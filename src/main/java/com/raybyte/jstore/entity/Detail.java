@@ -43,4 +43,6 @@ public class Detail {
     @Column(name = "update_date")
     private Timestamp updateDate;
 
+    @Column(name = "keyword")
+    private String keyword;
 }
