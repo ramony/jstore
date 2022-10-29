@@ -23,7 +23,7 @@ spec:
             - containerPort: 8080
           env:
             - name: spring.datasource.url
-              value: jdbc:mysql://mysql:3306/jstoredb9?characterEncoding=utf8&useSSL=true&useUnicode=true
+              value: jdbc:mysql://mysql:3306/jstoredb?characterEncoding=utf8&useSSL=true&useUnicode=true
 ---
 
 ## 直接部署到集群外

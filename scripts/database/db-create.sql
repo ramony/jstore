@@ -1,11 +1,11 @@
-CREATE DATABASE `jstoredb9`
+CREATE DATABASE `jstoredb`
 
 CREATE TABLE `listing` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `page_url` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `listing_UN` (`page_url`)
-) ENGINE=InnoDB AUTO_INCREMENT=23203 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=51637 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `detail` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -23,3 +23,7 @@ CREATE TABLE `detail` (
   UNIQUE KEY `detail_UN` (`detail_type`,`detail_id`),
   KEY `detail_keyword_IDX` (`keyword`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=51636 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `hibernate_sequence` (
+  `next_val` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

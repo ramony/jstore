@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -81,6 +82,7 @@ public class DetailController {
             if (limit > 0) {
                 pageList = pageList.subList(0, limit);
             }
+            pageList = pageList.stream().filter(d-> Objects.equals(d.getKeyword(),"NONE")).collect(Collectors.toList());
             return Result.ok(pageList);
         } catch (Exception e) {
             logger.error("", e);
