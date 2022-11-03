@@ -45,4 +45,7 @@ public class Detail {
 
     @Column(name = "keyword")
     private String keyword;
+
+    @Column(name = "tag_id")
+    private Integer tagId;
 }

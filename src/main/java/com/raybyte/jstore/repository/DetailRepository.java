@@ -20,6 +20,8 @@ public interface DetailRepository extends JpaRepository<Detail, Long>, JpaSpecif
 
     Page<Detail> findByDetailTypeAndReadFlagAndDetailIdLessThan(String detailType, Integer readFlag, Long id, Pageable pageable);
 
+    Page<Detail> findByDetailTypeAndTagIdAndReadFlagAndDetailIdLessThan(String detailType, Integer tagId, Integer readFlag, Long id, Pageable pageable);
+
     @Transactional
     @Modifying
     @Query(value = "update detail set keyword =?2 where id = ?1",nativeQuery = true)

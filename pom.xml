@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.raybyte</groupId>
 	<artifactId>jstore</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<name>jstore</name>
 	<description>jstore app</description>
 	<properties>
