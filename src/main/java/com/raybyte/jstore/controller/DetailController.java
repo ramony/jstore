@@ -91,33 +91,6 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/queryByType/{type}/{tagId}")
-    public Result queryByType(@Param("maxId") Long maxId, @PathVariable("type") String type, @PathVariable("tagId") Integer tagId) {
-        if (maxId <= 0) {
-            maxId = Long.MAX_VALUE;
-        }
-        try {
-            Sort sort = Sort.by(Sort.Direction.DESC, "detailId");
-            Page<Detail> pageList;
-            if (tagId > 0) {
-                pageList = detailRepository.findByDetailTypeAndTagIdAndReadFlagAndDetailIdLessThan(type, tagId, 0, maxId, PageUtils.create(1, 20, sort));
-            } else {
-                pageList = detailRepository.findByDetailTypeAndReadFlagAndDetailIdLessThan(type, 0, maxId, PageUtils.create(1, 20, sort));
-            }
-            LinksDTO links = new LinksDTO();
-            if (!CollectionUtils.isEmpty(pageList.getContent())) {
-                links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
-                pageList.getContent().stream().map(Detail::getDetailId).reduce(Long::min).ifPresent(min -> links.setNext("?maxId=" + min));
-            } else {
-                links.setList(new ArrayList<>());
-            }
-            return Result.ok(links);
-        } catch (Exception e) {
-            logger.error("", e);
-            return Result.fail("QUERY_ERROR_001", e.getMessage());
-        }
-    }
-
     @RequestMapping("/queryAll/{limit}")
     public Result query(@PathVariable("limit") Integer limit) {
         try {
