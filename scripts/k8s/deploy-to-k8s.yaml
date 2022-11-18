@@ -17,13 +17,15 @@ spec:
     spec:
       containers:
         - name: jstore
-          image: 127.0.0.1:5000/jstore:1.0.0
+          image: 127.0.0.1:5000/jstore:1.0.4
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:
             - name: spring.datasource.url
               value: jdbc:mysql://mysql:3306/jstoredb?characterEncoding=utf8&useSSL=true&useUnicode=true
+            - name: TZ
+              value: Asia/Shanghai
 ---
 
 ## 直接部署到集群外

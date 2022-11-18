@@ -48,4 +48,8 @@ public class Detail {
 
     @Column(name = "tag_id")
     private Integer tagId;
+
+    @Column(name = "score")
+    private Integer score;
+
 }

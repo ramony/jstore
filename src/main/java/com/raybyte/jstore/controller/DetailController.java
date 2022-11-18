@@ -3,6 +3,7 @@ package com.raybyte.jstore.controller;
 import com.raybyte.jstore.dto.LinkDTO;
 import com.raybyte.jstore.dto.LinksDTO;
 import com.raybyte.jstore.dto.MarkReadDTO;
+import com.raybyte.jstore.dto.MarkScoreDTO;
 import com.raybyte.jstore.entity.Detail;
 import com.raybyte.jstore.entity.Result;
 import com.raybyte.jstore.repository.DetailRepository;
@@ -42,7 +43,7 @@ public class DetailController {
         int count = 0;
         try {
             for (Detail detail : detailList) {
-                if (!detailRepository.existsByDetailUrl(detail.getDetailUrl())) {
+                if (!detailRepository.existsByDetailTypeAndDetailId(detail.getDetailType(), detail.getDetailId())) {
                     detail.setCreateDate(new Timestamp(System.currentTimeMillis()));
                     detail.setUpdateDate(new Timestamp(System.currentTimeMillis()));
                     detailRepository.save(detail);
@@ -57,7 +58,7 @@ public class DetailController {
     }
 
     @RequestMapping("/query/{type}")
-    public Result query(@PathVariable("type") String type, @Param("maxId") final Long maxId, @Param("tagId") final Integer tagId) {
+    public Result query(@PathVariable("type") String type, @Param("maxId") final Long maxId, @Param("tagId") final Integer tagId, @Param("readFlag") final Integer readFlag) {
         try {
             Sort sort = Sort.by(Sort.Direction.DESC, "detailId");
             Specification<Detail> specification = new Specification<Detail>() {
@@ -70,17 +71,25 @@ public class DetailController {
                     if (tagId != null) {
                         predicates.add(criteriaBuilder.equal(root.get("tagId"), tagId));
                     }
-                    predicates.add(criteriaBuilder.lessThan(root.get("id"), (maxId == null || maxId <= 0) ? Long.MAX_VALUE : maxId));
+                    predicates.add(criteriaBuilder.equal(root.get("readFlag"), readFlag == null ? 0 : readFlag));
+                    predicates.add(criteriaBuilder.lessThan(root.get("detailId"), (maxId == null || maxId <= 0) ? Long.MAX_VALUE : maxId));
                     return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
             };
-
             Page<Detail> pageList = detailRepository.findAll(specification, PageUtils.create(1, 20, sort));
 
             LinksDTO links = new LinksDTO();
             if (!CollectionUtils.isEmpty(pageList.getContent())) {
                 links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
                 pageList.getContent().stream().map(Detail::getDetailId).reduce(Long::min).ifPresent(min -> links.setNext("?maxId=" + min));
+                StringBuffer param = new StringBuffer();
+                if (tagId != null) {
+                    param.append("&tagId=" + tagId);
+                }
+                if (readFlag != null) {
+                    param.append("&readFlag=" + readFlag);
+                }
+                links.setNext(links.getNext() + param);
             } else {
                 links.setList(new ArrayList<>());
             }
@@ -142,6 +151,25 @@ public class DetailController {
                     readFlag = 1;
                 }
                 detailDB.setReadFlag(readFlag);
+                detailDB.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+                detailRepository.save(detailDB);
+            }
+            return Result.ok(1);
+        } catch (Exception e) {
+            logger.error("", e);
+            return Result.fail("MARK_ERROR_001", e.getMessage());
+        }
+    }
+
+    @RequestMapping("/markScore")
+    public Result markScore(@RequestBody MarkScoreDTO markScoreDTO) {
+        try {
+            // System.out.println(detailIdString);
+            String[] details = markScoreDTO.getDetailIdString().split("\\-");
+            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(details[0], Long.valueOf(details[1]));
+            if (detailDB != null) {
+                detailDB.setReadFlag(1);
+                detailDB.setScore(markScoreDTO.getScore());
                 detailDB.setUpdateDate(new Timestamp(System.currentTimeMillis()));
                 detailRepository.save(detailDB);
             }
