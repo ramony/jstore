@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.raybyte</groupId>
 	<artifactId>jstore</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.0</version>
 	<name>jstore</name>
 	<description>jstore app</description>
 	<properties>
@@ -51,6 +51,14 @@
 			<version>1.2.17</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -92,7 +100,7 @@
 				<configuration>
 					<registryUrl>127.0.0.1:5000</registryUrl>
 					<!--镜像名称改为私有仓库地址和端口，后面直接上传到私服仓库-->
-					<imageName>127.0.0.1:5000/${project.artifactId}:${project.version}</imageName>
+					<imageName>127.0.0.1:5000/${project.artifactId}:${project.version}-${deployTag}</imageName>
 <!--					<imageTags>-->
 <!--						<imageTag>${project.version}</imageTag>-->
 <!--						<imageTag>latest</imageTag>-->

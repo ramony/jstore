@@ -23,3 +23,11 @@ spring:
       charset:utf-8
       force:true
       enabled:true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}

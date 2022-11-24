@@ -161,6 +161,16 @@ public class DetailController {
         }
     }
 
+    @RequestMapping("/markAllReadWithSameKeyword")
+    public Result markAllReadWithSameKeyword() {
+        try {
+            int updateCount = detailRepository.markAllReadWithSameKeyword();
+            return Result.ok(updateCount);
+        } catch (Exception e) {
+            logger.error("", e);
+            return Result.fail("UPDATE_ERROR_001", e.getMessage());
+        }
+    }
     @RequestMapping("/markScore")
     public Result markScore(@RequestBody MarkScoreDTO markScoreDTO) {
         try {
