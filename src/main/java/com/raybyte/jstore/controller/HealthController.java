@@ -10,7 +10,7 @@ public class HealthController {
 
     @RequestMapping("/status")
     public Result status() {
-        return Result.ok("OK5");
+        return Result.ok("OK");
     }
 
 }
