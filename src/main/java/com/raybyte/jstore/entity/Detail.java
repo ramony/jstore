@@ -20,7 +20,10 @@ public class Detail {
     private String detailType;
 
     @Column(name = "detail_id")
-    private Long detailId;
+    private String detailId;
+
+    @Column(name = "detail_order")
+    private Long detailOrder;
 
     @Column(name = "detail_title")
     private String detailTitle;

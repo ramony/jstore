@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 
 public interface DetailRepository extends JpaRepository<Detail, Long>, JpaSpecificationExecutor<Detail> {
 
-    boolean existsByDetailTypeAndDetailId(String detailType, Long detailId);
+    boolean existsByDetailTypeAndDetailId(String detailType, String detailId);
 
     boolean existsByKeywordAndReadFlag(String keyword, Integer readFlag);
 

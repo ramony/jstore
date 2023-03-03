@@ -72,7 +72,7 @@ public class DetailController {
                         predicates.add(criteriaBuilder.equal(root.get("tagId"), tagId));
                     }
                     predicates.add(criteriaBuilder.equal(root.get("readFlag"), readFlag == null ? 0 : readFlag));
-                    predicates.add(criteriaBuilder.lessThan(root.get("detailId"), (maxId == null || maxId <= 0) ? Long.MAX_VALUE : maxId));
+                    predicates.add(criteriaBuilder.lessThan(root.get("detailOrder"), (maxId == null || maxId <= 0) ? Long.MAX_VALUE : maxId));
                     return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
                 }
             };
@@ -81,7 +81,7 @@ public class DetailController {
             LinksDTO links = new LinksDTO();
             if (!CollectionUtils.isEmpty(pageList.getContent())) {
                 links.setList(pageList.getContent().stream().map(this::createLinkDTO).collect(Collectors.toList()));
-                pageList.getContent().stream().map(Detail::getDetailId).reduce(Long::min).ifPresent(min -> links.setNext("?maxId=" + min));
+                pageList.getContent().stream().map(Detail::getDetailOrder).reduce(Long::min).ifPresent(min -> links.setNext("?maxId=" + min));
                 StringBuffer param = new StringBuffer();
                 if (tagId != null) {
                     param.append("&tagId=" + tagId);
