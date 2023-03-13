@@ -28,8 +28,10 @@ spec:
               mountPath: /home/jstore/log/
             - name: filebeat-config
               mountPath: /etc/filebeat.yml
+              readOnly: true
+              subPath: filebeat.yml
         - name: jstore
-          image: 127.0.0.1:5000/jstore:1.0.0
+          image: 127.0.0.1:5000/jstore:1.0.0-42952
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -38,10 +40,10 @@ spec:
               value: jdbc:mysql://mysql:3306/jstoredb?characterEncoding=utf8&useSSL=true&useUnicode=true
             - name: TZ
               value: Asia/Shanghai
-        volumes:
-          - name: empty-app-log
-            emptyDir: {}
-          - name: filebeat-config
-            configMap:
-              name: filebeat-config-jstore-pod
----
+      volumes:
+        - name: empty-app-log
+          emptyDir: {}
+        - name: filebeat-config
+          configMap:
+            name: filebeat-config-jstore-pod
+
