@@ -1,0 +1,47 @@
+## 正常
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jstore
+  name: jstore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jstore
+  template:
+    metadata:
+      labels:
+        app: jstore
+    spec:
+      containers:
+        - image: elastic/filebeat:7.9.2
+          args: [
+            "-c", "/etc/filebeat.yml",
+            "-e",
+          ]
+          imagePullPolicy: Always
+          name: filebeat
+          volumeMounts:
+            - name: empty-app-log
+              mountPath: /home/jstore/log/
+            - name: filebeat-config
+              mountPath: /etc/filebeat.yml
+        - name: jstore
+          image: 127.0.0.1:5000/jstore:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: spring.datasource.url
+              value: jdbc:mysql://mysql:3306/jstoredb?characterEncoding=utf8&useSSL=true&useUnicode=true
+            - name: TZ
+              value: Asia/Shanghai
+        volumes:
+          - name: empty-app-log
+            emptyDir: {}
+          - name: filebeat-config
+            configMap:
+              name: filebeat-config-jstore-pod
+---
