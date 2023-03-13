@@ -1,4 +1,6 @@
-## based on https://www.cnblogs.com/scajy/p/15543569.html
+## based on
+## https://www.cnblogs.com/scajy/p/15543569.html
+## https://zhuanlan.zhihu.com/p/267063120
 ---
 apiVersion: v1
 kind: ConfigMap
