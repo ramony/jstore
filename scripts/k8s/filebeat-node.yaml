@@ -3,6 +3,7 @@
 ## https://zhuanlan.zhihu.com/p/267063120
 ## https://www.cnblogs.com/cjsblog/p/9445792.html good
 ## https://www.elastic.co/guide/en/beats/filebeat/current/configuration-filebeat-options.html
+## https://blog.csdn.net/xjjj064/article/details/114285773
 ---
 apiVersion: v1
 kind: ConfigMap

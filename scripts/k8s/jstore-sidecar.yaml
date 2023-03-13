@@ -40,6 +40,9 @@ spec:
               value: jdbc:mysql://mysql:3306/jstoredb?characterEncoding=utf8&useSSL=true&useUnicode=true
             - name: TZ
               value: Asia/Shanghai
+          volumeMounts:
+            - name: empty-app-log
+              mountPath: /home/jstore/log/
       volumes:
         - name: empty-app-log
           emptyDir: {}
