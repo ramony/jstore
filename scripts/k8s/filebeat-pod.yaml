@@ -1,6 +1,8 @@
 ## based on
 ## https://www.cnblogs.com/gered/p/15386300.html
 ## https://blog.csdn.net/qq_36266502/article/details/107442196 use es pipeline
+## https://iminto.github.io/post/filebeat%E4%BF%AE%E6%94%B9index%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9D%91/
+## https://www.cnblogs.com/h--d/p/13179962.html
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -15,7 +17,8 @@ data:
       enabled: true
       paths:
       - "/home/jstore/log/*.log"
-    
     output.elasticsearch:
       hosts: ['elasticsearch:9200']
-      index: "jstore-log-*"
+    setup.ilm.enabled: auto
+    setup.ilm.rollover_alias: "jstore-log"
+    setup.ilm.pattern: "{now/d}-000001"
