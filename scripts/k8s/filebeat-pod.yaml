@@ -1,5 +1,6 @@
 ## based on
-##
+## https://www.cnblogs.com/gered/p/15386300.html
+## https://blog.csdn.net/qq_36266502/article/details/107442196 use es pipeline
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -17,3 +18,4 @@ data:
     
     output.elasticsearch:
       hosts: ['elasticsearch:9200']
+      index: "jstore-log-*"
