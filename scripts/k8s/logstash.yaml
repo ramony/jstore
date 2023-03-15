@@ -4,7 +4,7 @@
 ## https://www.cnblogs.com/cjsblog/p/9445792.html good
 ## https://www.elastic.co/guide/en/beats/filebeat/current/configuration-filebeat-options.html
 ## https://blog.csdn.net/xjjj064/article/details/114285773
-
+## https://blog.csdn.net/Soft_Engneer/article/details/124553616 K8S搭建ELK(Elasticsearch,Kibana,Logstash和Filebeat）
 apiVersion: v1
 kind: ConfigMap
 metadata:
