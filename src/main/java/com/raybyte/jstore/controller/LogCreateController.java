@@ -16,12 +16,14 @@ public class LogCreateController {
     @RequestMapping("/create")
     public Result create() {
         float rand = new Random().nextInt(100);
-        if (rand < 33) {
+        if (rand < 25) {
             logger.info("info:" + rand);
-        } else if (rand < 66) {
+        } else if (rand < 50) {
             logger.warn("warn:" + rand);
+        } else if (rand < 75) {
+            logger.warn("error:" + rand);
         } else {
-            logger.error("error:" + rand);
+            throw new RuntimeException("jstore run exception");
         }
         return Result.ok(rand);
     }
