@@ -1,0 +1,116 @@
+## based on
+## https://www.cnblogs.com/scajy/p/15543569.html good
+## https://zhuanlan.zhihu.com/p/267063120
+## https://www.cnblogs.com/cjsblog/p/9445792.html good
+## https://www.elastic.co/guide/en/beats/filebeat/current/configuration-filebeat-options.html
+## https://blog.csdn.net/xjjj064/article/details/114285773
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-yml-config
+  labels:
+    k8s-app: logstash
+data:
+  logstash.yml: |-
+    http.host: "0.0.0.0"
+    xpack.monitoring.elasticsearch.hosts: http://elasticsearch:9200
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  labels:
+    k8s-app: logstash
+data:
+  logstash.conf: |-
+    input {
+      beats {
+        port => 5044
+        client_inactivity_timeout => 36000
+      }
+    }
+      
+    filter {
+      mutate {
+        rename => { "[host][name]" => "host" }
+      }
+    }
+      
+    output {
+      elasticsearch {
+        hosts => ["http://elasticsearch:9200"]
+        index => "logstash-jstore-log-%{+YYYY.MM.dd}"
+      }
+      stdout{
+        codec => rubydebug
+      }
+    }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: logstash
+  name: logstash
+  namespace: default
+spec:
+  serviceName: "logstash"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      imagePullSecrets:
+        - name: registry-pull-secret
+      containers:
+        - image: logstash:7.17.2
+          name: logstash
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "400m"
+            limits:
+              memory: "800Mi"
+              cpu: "800m"
+          volumeMounts:
+            - name: logstash-yml-config
+              mountPath: /usr/share/logstash/config/logstash.yml
+              subPath: logstash.yml
+            - name: logstash-config
+              mountPath: /usr/share/logstash/pipeline/logstash.conf
+              subPath: logstash.conf
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+      volumes:
+        - name: logstash-yml-config
+          configMap:
+            name: logstash-yml-config
+        - name: logstash-config
+          configMap:
+            name: logstash-config
+      #nodeSelector:
+      # kubernetes.io/hostname: 172.16.30.1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: logstash
+  name: logstash
+  namespace: default
+spec:
+  ports:
+    - name: logstsh
+      port: 5044
+      protocol: TCP
+      targetPort: 9600
+  clusterIP: None
+  selector:
+    app: logstash
+  type: ClusterIP
