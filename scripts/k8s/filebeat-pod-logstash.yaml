@@ -15,6 +15,9 @@ data:
     filebeat.inputs:
     - type: log
       enabled: true
+      multiline.pattern: '^\['
+      multiline.negate: true
+      multiline.match: after
       paths:
       - "/home/jstore/log/*.log"
     output.logstash:
