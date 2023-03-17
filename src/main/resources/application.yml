@@ -31,3 +31,7 @@ management:
   metrics:
     tags:
       application: jstore
+
+# slf4j日志配置
+logging:
+  config: classpath:logback.xml

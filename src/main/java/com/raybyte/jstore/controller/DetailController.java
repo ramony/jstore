@@ -8,7 +8,8 @@ import com.raybyte.jstore.entity.Detail;
 import com.raybyte.jstore.entity.Result;
 import com.raybyte.jstore.repository.DetailRepository;
 import com.raybyte.jstore.utils.PageUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -34,7 +35,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/detail")
 public class DetailController {
 
-    Logger logger = Logger.getLogger(DetailController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DetailController.class);
+
     @Autowired
     private DetailRepository detailRepository;
 
@@ -52,7 +54,7 @@ public class DetailController {
             }
             return Result.ok(count);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("SAVE_ERROR_001", e.getMessage());
         }
     }
@@ -95,7 +97,7 @@ public class DetailController {
             }
             return Result.ok(links);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("QUERY_ERROR_001", e.getMessage());
         }
     }
@@ -110,7 +112,7 @@ public class DetailController {
             pageList = pageList.stream().filter(d -> Objects.equals(d.getKeyword(), "NONE")).collect(Collectors.toList());
             return Result.ok(pageList);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("QUERY_ERROR_001", e.getMessage());
         }
     }
@@ -121,7 +123,7 @@ public class DetailController {
             boolean exist = detailRepository.existsByKeywordAndReadFlag(keyword, 1);
             return Result.ok(exist);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("EXIST_ERROR_001", e.getMessage());
         }
     }
@@ -134,7 +136,7 @@ public class DetailController {
             }
             return Result.ok(1);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("UPDATE_ERROR_001", e.getMessage());
         }
     }
@@ -156,7 +158,7 @@ public class DetailController {
             }
             return Result.ok(1);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("MARK_ERROR_001", e.getMessage());
         }
     }
@@ -167,7 +169,7 @@ public class DetailController {
             int updateCount = detailRepository.markAllReadWithSameKeyword();
             return Result.ok(updateCount);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("UPDATE_ERROR_001", e.getMessage());
         }
     }
@@ -185,7 +187,7 @@ public class DetailController {
             }
             return Result.ok(1);
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             return Result.fail("MARK_ERROR_001", e.getMessage());
         }
     }
