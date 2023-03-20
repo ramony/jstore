@@ -32,6 +32,9 @@ data:
     }
       
     filter {
+      grok {
+        match => {"message" => '\[%{TIMESTAMP_ISO8601:time}\] \[%{DATA:thread}\] \[%{DATA:traceId}\] \[%{LOGLEVEL:logLevel}\] %{DATA:clazz}\[%{NUMBER:line}\] %{GREEDYDATA:logMsg}'}
+      }
       mutate {
         rename => { "[host][name]" => "host" }
       }
