@@ -60,7 +60,7 @@ public class DetailController {
     @RequestMapping("/query/{type}")
     public Result query(@PathVariable("type") String type, @Param("maxId") final Long maxId, @Param("tagId") final Integer tagId, @Param("readFlag") final Integer readFlag) {
         try {
-            Sort sort = Sort.by(Sort.Direction.DESC, "detailId");
+            Sort sort = Sort.by(Sort.Direction.DESC, "detailOrder");
             Specification<Detail> specification = new Specification<Detail>() {
                 private static final long serialVersionUID = 4234324321L;
 
@@ -93,6 +93,7 @@ public class DetailController {
             } else {
                 links.setList(new ArrayList<>());
             }
+            links.setTotalPages(pageList.getTotalPages());
             return Result.ok(links);
         } catch (Exception e) {
             logger.error("", e);
@@ -142,9 +143,7 @@ public class DetailController {
     @RequestMapping("/markReadByDetailId")
     public Result markReadByDetailId(@RequestBody MarkReadDTO markReadDTO) {
         try {
-            // System.out.println(detailIdString);
-            String[] details = markReadDTO.getDetailIdString().split("\\-");
-            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(details[0], Long.valueOf(details[1]));
+            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(markReadDTO.getDetailType(), markReadDTO.getDetailId());
             if (detailDB != null) {
                 Integer readFlag = markReadDTO.getReadFlag();
                 if (readFlag == null || readFlag < 1) {
@@ -175,8 +174,7 @@ public class DetailController {
     public Result markScore(@RequestBody MarkScoreDTO markScoreDTO) {
         try {
             // System.out.println(detailIdString);
-            String[] details = markScoreDTO.getDetailIdString().split("\\-");
-            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(details[0], Long.valueOf(details[1]));
+            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(markScoreDTO.getDetailType(), markScoreDTO.getDetailId());
             if (detailDB != null) {
                 detailDB.setReadFlag(1);
                 detailDB.setScore(markScoreDTO.getScore());

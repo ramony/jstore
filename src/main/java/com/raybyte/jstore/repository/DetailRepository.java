@@ -16,7 +16,7 @@ public interface DetailRepository extends JpaRepository<Detail, Long>, JpaSpecif
 
     boolean existsByKeywordAndReadFlag(String keyword, Integer readFlag);
 
-    Detail findByDetailTypeAndDetailId(String detailType, Long detailId);
+    Detail findByDetailTypeAndDetailId(String detailType, String detailId);
 
     @Transactional
     @Modifying
