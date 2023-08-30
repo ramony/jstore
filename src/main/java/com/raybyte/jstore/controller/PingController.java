@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/health")
-public class HealthController {
+@RequestMapping("/ping")
+public class PingController {
 
-    @RequestMapping("/status")
-    public Result status() {
-        return Result.ok("OK");
+    @RequestMapping("/")
+    public String index() {
+        return "pong";
     }
 
 }

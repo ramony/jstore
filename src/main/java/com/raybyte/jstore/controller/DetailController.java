@@ -31,7 +31,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/detail")
+@RequestMapping("/v1/detail")
 public class DetailController {
 
     Logger logger = Logger.getLogger(DetailController.class);

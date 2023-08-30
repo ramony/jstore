@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/listing")
+@RequestMapping("/v1/listing")
 public class ListingController {
     Logger logger = Logger.getLogger(ListingController.class);
 
