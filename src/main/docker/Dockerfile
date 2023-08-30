@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM openjdk:19-jdk-alpine
 #创作者名字
 MAINTAINER raybyte
 
