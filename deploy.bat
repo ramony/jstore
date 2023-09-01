@@ -4,4 +4,5 @@ rem set MAVEN_HOME=C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 20
 set deployTag=%time:~1,1%%time:~3,2%%time:~6,2%
 call "%MAVEN_HOME%\bin\mvn" -DdeployTag=%deployTag% package
 call kubectl set image deploy jstore  *=127.0.0.1:5000/jstore:1.0.0-%deployTag%
+rem kubectl set image deployment/jstore  jstore=127.0.0.1:5000/jstore:1.0.0-888888
 echo jstore:1.0.0-%deployTag% deployed
