@@ -15,10 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -38,7 +35,7 @@ public class DetailController {
     @Autowired
     private DetailRepository detailRepository;
 
-    @RequestMapping("/createDetail")
+    @PostMapping("/createDetail")
     public Result<Integer> create(@RequestBody List<Detail> detailList) {
         int count = 0;
         try {
@@ -57,7 +54,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/query/{type}")
+    @GetMapping("/query/{type}")
     public Result query(@PathVariable("type") String type, @Param("maxId") final Long maxId, @Param("tagId") final Integer tagId, @Param("readFlag") final Integer readFlag) {
         try {
             Sort sort = Sort.by(Sort.Direction.DESC, "detailOrder");
@@ -101,7 +98,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/queryAll/{limit}")
+    @GetMapping("/queryAll/{limit}")
     public Result query(@PathVariable("limit") Integer limit) {
         try {
             List<Detail> pageList = detailRepository.findAll();
@@ -116,7 +113,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/checkKeywordRead/{keyword}")
+    @GetMapping("/checkKeywordRead/{keyword}")
     public Result checkKeywordRead(@PathVariable("keyword") String keyword) {
         try {
             boolean exist = detailRepository.existsByKeywordAndReadFlag(keyword, 1);
@@ -127,7 +124,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/updateKeyword")
+    @PostMapping("/updateKeyword")
     public Result updateKeyword(@RequestBody List<Detail> list) {
         try {
             for (Detail detail : list) {
@@ -140,7 +137,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/markReadByDetailId")
+    @PostMapping("/markReadByDetailId")
     public Result markReadByDetailId(@RequestBody MarkReadDTO markReadDTO) {
         try {
             Detail detailDB = detailRepository.findByDetailTypeAndDetailId(markReadDTO.getDetailType(), markReadDTO.getDetailId());
@@ -160,7 +157,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/markAllReadWithSameKeyword")
+    @PostMapping("/markAllReadWithSameKeyword")
     public Result markAllReadWithSameKeyword() {
         try {
             int updateCount = detailRepository.markAllReadWithSameKeyword();
@@ -170,7 +167,8 @@ public class DetailController {
             return Result.fail("UPDATE_ERROR_001", e.getMessage());
         }
     }
-    @RequestMapping("/markScore")
+
+    @PostMapping("/markScore")
     public Result markScore(@RequestBody MarkScoreDTO markScoreDTO) {
         try {
             // System.out.println(detailIdString);
