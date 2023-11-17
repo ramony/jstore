@@ -85,6 +85,9 @@ data:
       - source_labels: [__meta_kubernetes_service_name]
         action: replace
         target_label: kubernetes_name
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: pod  
 
     - job_name: 'kubernetes-services'
       kubernetes_sd_configs:
