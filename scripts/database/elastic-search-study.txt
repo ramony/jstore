@@ -1,0 +1,96 @@
+# simple search
+GET test_student/_search
+{
+  "query": {
+    "match_all": {
+    }
+  }
+}
+
+GET test_student/_search
+{
+  "query": {
+    "match": {
+      "region":"us"
+    }
+  }
+}
+
+# complex search
+GET test_student/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+#create new index
+PUT /test_student
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "text"
+      },
+      "name": {
+        "type": "text"
+      },
+      "books": {
+        "type": "integer"
+      }
+    }
+  }
+}
+
+#add new data
+POST /test_student/_doc/9
+{
+  "id":"99",
+  "name":"sheldon9",
+  "books":999
+}
+
+#view index structure
+GET test_student/_mapping
+
+#add new field
+PUT /test_student/_mapping
+{
+  "properties": {
+    "region":{
+      "type":"keyword"
+    }
+  }
+}
+
+# update field defination, it does not work for empty data
+PUT test_student/_mapping
+{
+  "properties": {
+    "region":{
+      "type":"keyword",
+      "null_value": "us"
+    }
+  }
+}
+
+# set default value if it's empty
+POST test_student/_update_by_query
+{
+    "script": {
+        "lang": "painless",
+        "source": "ctx._source.region='us'"
+    },
+    "query": {
+        "bool": {
+            "must_not": {
+                "exists": {
+                    "field": "region"
+                }
+            }
+        }
+    }
+}

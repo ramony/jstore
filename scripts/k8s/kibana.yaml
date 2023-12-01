@@ -38,6 +38,6 @@ spec:
             cpu: 1000m
         env:
         - name: ELASTICSEARCH_HOSTS
-          value: http://10.16.2.101:9200
+          value: http://elasticsearch:9200
         ports:
         - containerPort: 5601
