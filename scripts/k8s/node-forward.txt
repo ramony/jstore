@@ -1,0 +1,1 @@
+kubectl port-forward --address 0.0.0.0 pod/ingress-nginx-controller 80:80 433:433
