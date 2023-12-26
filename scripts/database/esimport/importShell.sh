@@ -1,0 +1,1 @@
+curl -H "Content-Type: application/json" -XPOST "localhost:30920/test_student/_bulk?refresh" --data-binary "@test_student_data.json"
