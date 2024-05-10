@@ -20,11 +20,11 @@ public interface DetailRepository extends JpaRepository<Detail, Long>, JpaSpecif
 
     @Transactional
     @Modifying
-    @Query(value = "update detail set keyword =?2 and update_date =CURRENT_TIMESTAMP() where id = ?1",nativeQuery = true)
+    @Query(value = "update detail set keyword =?2 , update_date =CURRENT_TIMESTAMP() where id = ?1",nativeQuery = true)
     int updateKeyword(Long id, String keyword);
 
     @Transactional
     @Modifying
-    @Query(value = "update detail x set read_flag =3 where read_flag =0 and keyword in (select keyword from (select keyword from detail d where read_flag=1 and keyword!='NONE') a)",nativeQuery = true)
+    @Query(value = "update detail x set read_flag =3,update_date =CURRENT_TIMESTAMP() where read_flag =0 and keyword in (select keyword from (select keyword from detail d where read_flag=1 and keyword!='NONE') a)",nativeQuery = true)
     int markAllReadWithSameKeyword();
 }
