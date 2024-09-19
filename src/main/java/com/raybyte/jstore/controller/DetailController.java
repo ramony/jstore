@@ -8,6 +8,7 @@ import com.raybyte.jstore.entity.Detail;
 import com.raybyte.jstore.entity.Result;
 import com.raybyte.jstore.repository.DetailRepository;
 import com.raybyte.jstore.utils.PageUtils;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,9 @@ public class DetailController {
         int count = 0;
         try {
             for (Detail detail : detailList) {
+                if(StringUtils.isBlank(detail.getKeyword())) {
+                    detail.setKeyword("NONE");
+                }
                 if (!detailRepository.existsByDetailTypeAndDetailId(detail.getDetailType(), detail.getDetailId())) {
                     detail.setCreateDate(new Timestamp(System.currentTimeMillis()));
                     detail.setUpdateDate(new Timestamp(System.currentTimeMillis()));

@@ -26,10 +26,10 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-security</artifactId>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,17 +68,17 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-spring-web</artifactId>
-			<version>3.0.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>io.springfox</groupId>-->
+<!--			<artifactId>springfox-spring-web</artifactId>-->
+<!--			<version>3.0.0</version>-->
+<!--		</dependency>-->
 
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-boot-starter</artifactId>
-			<version>3.0.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>io.springfox</groupId>-->
+<!--			<artifactId>springfox-boot-starter</artifactId>-->
+<!--			<version>3.0.0</version>-->
+<!--		</dependency>-->
 
 	</dependencies>
 
@@ -131,7 +131,7 @@
 <!--					<baseImage>java:8</baseImage>-->
 					<pushImage>true</pushImage>
 					<forceTags>true</forceTags>
-					<dockerHost>http://127.0.0.1:2376</dockerHost>
+					<dockerHost>http://127.0.0.1:2375</dockerHost>
 					<dockerDirectory>src/main/docker</dockerDirectory>
 					<!--用来配置Jar启动的Jvm参数，如-Xmx -->
 					<env>
