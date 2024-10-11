@@ -18,7 +18,7 @@ spec:
     spec: #期望Pod实现的功能（即在pod中部署）
       containers: #生成container，与docker中的container是同一种
       - name: mysql
-        image: mysql:5.7 #使用镜像mysql: 创建container，该container默认3306端口可访问
+        image: mysql:latest #使用镜像mysql: 创建container，该container默认3306端口可访问
         ports:
         - containerPort: 3306  # 开启本容器的3306端口可访问
         env:
