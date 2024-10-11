@@ -6,14 +6,18 @@ server:
     enabled: true
 
 spring:
+  security:
+    user:
+      name: user
+      password: 123456
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    password: Password123
-    url: jdbc:mysql://localhost:31090/jstoredb?characterEncoding=utf8&useSSL=true&useUnicode=true
-    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.0.107:3306/jstoremini?characterEncoding=utf8&useSSL=true&useUnicode=true
+    username: rayuser
   jpa:
     properties:
       hibernate:

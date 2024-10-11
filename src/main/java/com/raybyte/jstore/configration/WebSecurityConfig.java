@@ -17,8 +17,8 @@
 //    @Bean
 //    UserDetailsService userDetailsService() {
 //        InMemoryUserDetailsManager users = new InMemoryUserDetailsManager();
-//        users.createUser(User.withUsername("aaa")
-//                .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("bbb"))
+//        users.createUser(User.withUsername("ray")
+//                .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("123456"))
 //                .authorities(ACCOUNT_CLIENT_AUTHORITY).build());
 //        return users;
 //    }
@@ -27,25 +27,10 @@
 //    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        return http
 //                .authorizeRequests()
-//                .antMatchers("/**").permitAll()
+//                .anyRequest().authenticated()
 //                .and()
 //                .csrf()
 //                .disable()
 //                .build();
-////
-////        return http
-////                .authorizeRequests()
-////                .antMatchers("/**").permitAll()
-////                .antMatchers("/v1/**").permitAll()
-////                .antMatchers("/ping").permitAll()
-////                // 增加swagger内容不需要basicauth权限可以直接访问
-////                .antMatchers("/swagger-resources/**","/swagger-ui.html","/api/v2/api-docs","/webjars/**","/swagger-ui/**").permitAll()
-////                .antMatchers("/**", "/settings/**").hasAuthority(ACCOUNT_CLIENT_AUTHORITY).anyRequest().authenticated()
-////                .and()
-////                .httpBasic()
-////                .and()
-////                .csrf()
-////                .disable()
-////                .build();
 //    }
 //}
