@@ -8,6 +8,7 @@ import com.raybyte.jstore.entity.Detail;
 import com.raybyte.jstore.entity.Result;
 import com.raybyte.jstore.repository.DetailRepository;
 import com.raybyte.jstore.utils.PageUtils;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -31,18 +29,21 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/detail")
+@RequestMapping("/v1/detail")
 public class DetailController {
 
     Logger logger = Logger.getLogger(DetailController.class);
     @Autowired
     private DetailRepository detailRepository;
 
-    @RequestMapping("/createDetail")
+    @PostMapping("/createDetail")
     public Result<Integer> create(@RequestBody List<Detail> detailList) {
         int count = 0;
         try {
             for (Detail detail : detailList) {
+                if(StringUtils.isBlank(detail.getKeyword())) {
+                    detail.setKeyword("NONE");
+                }
                 if (!detailRepository.existsByDetailTypeAndDetailId(detail.getDetailType(), detail.getDetailId())) {
                     detail.setCreateDate(new Timestamp(System.currentTimeMillis()));
                     detail.setUpdateDate(new Timestamp(System.currentTimeMillis()));
@@ -57,10 +58,10 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/query/{type}")
+    @GetMapping("/query/{type}")
     public Result query(@PathVariable("type") String type, @Param("maxId") final Long maxId, @Param("tagId") final Integer tagId, @Param("readFlag") final Integer readFlag) {
         try {
-            Sort sort = Sort.by(Sort.Direction.DESC, "detailId");
+            Sort sort = Sort.by(Sort.Direction.DESC, "detailOrder");
             Specification<Detail> specification = new Specification<Detail>() {
                 private static final long serialVersionUID = 4234324321L;
 
@@ -93,6 +94,7 @@ public class DetailController {
             } else {
                 links.setList(new ArrayList<>());
             }
+            links.setTotalPages(pageList.getTotalPages());
             return Result.ok(links);
         } catch (Exception e) {
             logger.error("", e);
@@ -100,7 +102,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/queryAll/{limit}")
+    @GetMapping("/queryAll/{limit}")
     public Result query(@PathVariable("limit") Integer limit) {
         try {
             List<Detail> pageList = detailRepository.findAll();
@@ -115,7 +117,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/checkKeywordRead/{keyword}")
+    @GetMapping("/checkKeywordRead/{keyword}")
     public Result checkKeywordRead(@PathVariable("keyword") String keyword) {
         try {
             boolean exist = detailRepository.existsByKeywordAndReadFlag(keyword, 1);
@@ -126,7 +128,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/updateKeyword")
+    @PostMapping("/updateKeyword")
     public Result updateKeyword(@RequestBody List<Detail> list) {
         try {
             for (Detail detail : list) {
@@ -139,12 +141,10 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/markReadByDetailId")
+    @PostMapping("/markReadByDetailId")
     public Result markReadByDetailId(@RequestBody MarkReadDTO markReadDTO) {
         try {
-            // System.out.println(detailIdString);
-            String[] details = markReadDTO.getDetailIdString().split("\\-");
-            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(details[0], Long.valueOf(details[1]));
+            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(markReadDTO.getDetailType(), markReadDTO.getDetailId());
             if (detailDB != null) {
                 Integer readFlag = markReadDTO.getReadFlag();
                 if (readFlag == null || readFlag < 1) {
@@ -161,7 +161,7 @@ public class DetailController {
         }
     }
 
-    @RequestMapping("/markAllReadWithSameKeyword")
+    @PostMapping("/markAllReadWithSameKeyword")
     public Result markAllReadWithSameKeyword() {
         try {
             int updateCount = detailRepository.markAllReadWithSameKeyword();
@@ -171,12 +171,12 @@ public class DetailController {
             return Result.fail("UPDATE_ERROR_001", e.getMessage());
         }
     }
-    @RequestMapping("/markScore")
+
+    @PostMapping("/markScore")
     public Result markScore(@RequestBody MarkScoreDTO markScoreDTO) {
         try {
             // System.out.println(detailIdString);
-            String[] details = markScoreDTO.getDetailIdString().split("\\-");
-            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(details[0], Long.valueOf(details[1]));
+            Detail detailDB = detailRepository.findByDetailTypeAndDetailId(markScoreDTO.getDetailType(), markScoreDTO.getDetailId());
             if (detailDB != null) {
                 detailDB.setReadFlag(1);
                 detailDB.setScore(markScoreDTO.getScore());

@@ -7,6 +7,8 @@ metadata:
 spec:
   ports:
   - port: 5601
+    protocol: TCP
+    nodePort: 32601
   type: NodePort
   selector:
     app: kibana

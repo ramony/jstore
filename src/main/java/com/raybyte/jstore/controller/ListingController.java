@@ -6,19 +6,17 @@ import com.raybyte.jstore.repository.ListingRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/listing")
+@RequestMapping("/v1/listing")
 public class ListingController {
     Logger logger = Logger.getLogger(ListingController.class);
 
     @Autowired
     private ListingRepository listingRepository;
 
-    @RequestMapping("/createList")
+    @PostMapping("/createList")
     public Result create(@RequestBody Listing listing) {
         try {
             if(!listingRepository.existsByPageUrl(listing.getPageUrl())) {
@@ -31,7 +29,7 @@ public class ListingController {
         }
     }
 
-    @RequestMapping("/exist")
+    @GetMapping("/exist")
     public Result exist(@Param("pageUrl") String pageUrl) {
         try {
             boolean exist = listingRepository.existsByPageUrl(pageUrl);

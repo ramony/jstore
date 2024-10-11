@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class MarkReadDTO {
-    private String detailIdString;
+    private String detailId;
+    private String detailType;
     private Integer readFlag;
 }

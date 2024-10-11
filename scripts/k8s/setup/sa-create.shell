@@ -1,0 +1,5 @@
+kubectl apply -f recommended270.yaml
+
+kubectl apply -f  dashboard-adminuser.yaml
+
+kubectl -n kubernetes-dashboard create token admin-user --duration=720h

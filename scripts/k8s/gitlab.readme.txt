@@ -1,0 +1,8 @@
+setup guide
+https://blog.csdn.net/C_Green_Hand/article/details/129527451
+
+cpu 100% 解决办法
+https://blog.csdn.net/qq_41327390/article/details/122824099
+
+GitLab更改克隆地址问题
+https://www.cnblogs.com/mq0036/p/17340784.html

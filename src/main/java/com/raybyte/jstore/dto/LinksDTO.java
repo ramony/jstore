@@ -8,4 +8,5 @@ import java.util.List;
 public class LinksDTO {
     private List<LinkDTO> list;
     private String next;
+    private Integer totalPages;
 }
