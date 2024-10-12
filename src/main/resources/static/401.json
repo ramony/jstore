@@ -1,0 +1,5 @@
+{
+  "success": false,
+  "errorCode": "401",
+  "errorMsg": "Authentication is required"
+}

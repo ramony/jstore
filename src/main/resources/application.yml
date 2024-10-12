@@ -5,14 +5,23 @@ server:
   compression:
     enabled: true
 
+#security:
+#  enable-csrf: false
+
 spring:
-  security:
-    user:
-      name: user
-      password: 123456
+#  security:
+#    csrf:
+#      enabled: false  # 开启CSRF保护
+#    user:
+#      name: user
+#      password: 123456
   mvc:
+    static-path-pattern: /static/**
     pathmatch:
       matching-strategy: ant_path_matcher
+  web:
+    resources:
+      static-locations: classpath:/static/
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     password: 123456
