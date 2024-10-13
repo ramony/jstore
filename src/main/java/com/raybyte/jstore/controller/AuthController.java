@@ -1,7 +1,7 @@
 package com.raybyte.jstore.controller;
 
 import com.raybyte.jstore.auth.JwtTokenProvider;
-import com.raybyte.jstore.auth.UserRepository;
+import com.raybyte.jstore.auth.UserService;
 import com.raybyte.jstore.entity.AuthRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping("/login")
     public String login(@RequestBody AuthRequest request) {
@@ -34,7 +34,7 @@ public class AuthController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, request.getPassword()));
 
         String token = jwtTokenProvider.createToken(username,
-                userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username " + username + "not found")).getAuthorities()
+                userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username " + username + "not found")).getAuthorities()
         );
         return token;
     }

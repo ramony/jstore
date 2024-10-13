@@ -37,7 +37,7 @@ public class JwtTokenAuthenticationFilter extends GenericFilterBean {
             }
         } catch (InvalidJwtAuthenticationException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write("Invalid token");
+            response.getWriter().write("Invalid Token");
             response.getWriter().flush();
             return;
         }

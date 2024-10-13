@@ -13,6 +13,6 @@ public class InvalidAuthenticationEntryPoint implements AuthenticationEntryPoint
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "凭证无效");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "401 Unauthorized");
     }
 }

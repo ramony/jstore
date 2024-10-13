@@ -36,7 +36,7 @@ public class JwtTokenProvider {
         claims.put("authorities", authorities);
 
         Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getValidityInMs());
+        Date validity = new Date(now.getTime() + jwtProperties.getExpireTimeMs());
 
         return Jwts.builder()//
                 .setClaims(claims)//
@@ -47,7 +47,7 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

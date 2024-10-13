@@ -1,13 +1,8 @@
 package com.raybyte.jstore.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.raybyte.jstore.dto.UserDO;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,18 +10,12 @@ import java.util.Optional;
 @Repository
 public class UserRepository {
 
-    private static final Map<String, User> allUsers = new HashMap<>();
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @PostConstruct
-    protected void init() {
-        allUsers.put("pkslow", new User("pkslow", passwordEncoder.encode("123456"), Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))));
-        allUsers.put("user", new User("user", passwordEncoder.encode("123456"), Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+    private static final Map<String, UserDO> allUsers = new HashMap<>();
+    public Optional<UserDO> findByUsername(String username) {
+        return Optional.ofNullable(allUsers.get(username));
     }
 
-    public Optional<User> findByUsername(String username) {
-        return Optional.ofNullable(allUsers.get(username));
+    public void register(UserDO userDO) {
+        allUsers.put(userDO.getUsername(), userDO);
     }
 }
