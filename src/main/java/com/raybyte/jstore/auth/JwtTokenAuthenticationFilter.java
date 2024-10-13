@@ -1,6 +1,7 @@
 package com.raybyte.jstore.auth;
 
-import org.springframework.http.HttpStatus;
+import com.alibaba.fastjson.JSON;
+import com.raybyte.jstore.entity.Result;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -36,8 +37,8 @@ public class JwtTokenAuthenticationFilter extends GenericFilterBean {
                 }
             }
         } catch (InvalidJwtAuthenticationException e) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write("Invalid Token");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(JSON.toJSONString(Result.fail("401", "Invalid Token")));
             response.getWriter().flush();
             return;
         }

@@ -18,5 +18,6 @@ public class InvalidAuthenticationEntryPoint implements AuthenticationEntryPoint
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.getWriter().write(JSON.toJSONString(Result.fail("401", "UNAUTHORIZED")));
+        response.getWriter().flush();
     }
 }
