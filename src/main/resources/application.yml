@@ -5,16 +5,12 @@ server:
   compression:
     enabled: true
 
-#security:
-#  enable-csrf: false
-
+app:
+  jwt:
+    header: Authorization
+    expire: 604800 # 7天，s为单位
+    secret: abcdefghabcdefghabcdefghabcdefgh
 spring:
-#  security:
-#    csrf:
-#      enabled: false  # 开启CSRF保护
-#    user:
-#      name: user
-#      password: 123456
   mvc:
     static-path-pattern: /static/**
     pathmatch:
