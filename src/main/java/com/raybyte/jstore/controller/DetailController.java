@@ -172,14 +172,12 @@ public class DetailController {
         }
     }
 
-    @PostMapping("/markScore")
-    public Result markScore(@RequestBody MarkScoreDTO markScoreDTO) {
+    @PostMapping("/markReadLater")
+    public Result markReadLater(@RequestBody MarkScoreDTO markScoreDTO) {
         try {
-            // System.out.println(detailIdString);
             Detail detailDB = detailRepository.findByDetailTypeAndDetailId(markScoreDTO.getDetailType(), markScoreDTO.getDetailId());
             if (detailDB != null) {
-                detailDB.setReadFlag(1);
-                detailDB.setScore(markScoreDTO.getScore());
+                detailDB.setReadFlag(9);
                 detailDB.setUpdateDate(new Timestamp(System.currentTimeMillis()));
                 detailRepository.save(detailDB);
             }

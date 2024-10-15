@@ -132,9 +132,9 @@
 					</execution>
 				</executions>
 				<configuration>
-					<registryUrl>127.0.0.1:5555</registryUrl>
+					<registryUrl>127.0.0.1:5000</registryUrl>
 					<!--镜像名称改为私有仓库地址和端口，后面直接上传到私服仓库-->
-					<imageName>127.0.0.1:5555/${project.artifactId}:${project.version}-${deployTag}</imageName>
+					<imageName>127.0.0.1:5000/${project.artifactId}:${project.version}-${deployTag}</imageName>
 <!--					<imageTags>-->
 <!--						<imageTag>${project.version}</imageTag>-->
 <!--						<imageTag>latest</imageTag>-->
